@@ -1,0 +1,12 @@
+{
+    "name": "com.zenvin.unity-utility",
+    "version": "1.0.0",
+    "displayName": "Zenvin Unity Utility",
+    "description": "Improvements to some of Unity's native Behaviour classes.",
+    "unity": "2017.4",
+    "author": {
+        "name": "Zenvin",
+        "email": "zenvin@outlook.de",
+        "url": ""
+    }
+}
