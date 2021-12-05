@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "displayName": "Zenvin Unity Utility",
     "description": "Improvements to some of Unity's native Behaviour classes.",
-    "unity": "2017.4+",
+    "unity": "2018.3",
   "author": {
     "name": "Zenvin",
     "email": "zenvin@outlook.de"
