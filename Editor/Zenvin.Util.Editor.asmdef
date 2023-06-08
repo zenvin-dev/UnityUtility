@@ -1,0 +1,19 @@
+{
+    "name": "Zenvin.Util.Editor",
+    "rootNamespace": "Zenvin.Util",
+    "references": [
+        "GUID:518bd1b3f45b6914aaaa3943e80cf56d",
+        "GUID:43e07366a3b322442ab7e131ca368d69"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
