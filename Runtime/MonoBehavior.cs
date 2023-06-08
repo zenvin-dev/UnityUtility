@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 
-namespace Zenvin.BaseClasses {
+namespace Zenvin.Util {
 	/// <summary>
 	/// A <see cref="MonoBehaviour"/> that caches its <see cref="Transform"/> reference to increase performance. <br></br>
 	/// Also contains implicit conversions to <see cref="Transform"/> and <see cref="GameObject"/>, as well as improved implementations for "Invoke" methods.

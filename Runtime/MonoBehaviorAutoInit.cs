@@ -4,7 +4,7 @@ using System.Reflection;
 using UnityEngine;
 using System;
 
-namespace Zenvin.BaseClasses {
+namespace Zenvin.Util {
 	public abstract class MonoBehaviorAutoInit : MonoBehavior {
 
 		private void Awake () {
