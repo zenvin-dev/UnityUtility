@@ -26,6 +26,9 @@ namespace Zenvin.Util {
 			btnRect.x += btnRect.width + EditorGUIUtility.standardVerticalSpacing;
 			btnRect.width = EditorGUIUtility.singleLineHeight;
 
+			// Draw empty label to prevent PrefixLabel from being disabled with succeeding PropertyField
+			EditorGUI.LabelField (fieldRect, GUIContent.none, GUIStyle.none);
+
 			EditorGUI.BeginDisabledGroup (!hasValueProp.boolValue);
 			EditorGUI.PropertyField (fieldRect, valueProp, GUIContent.none);
 			EditorGUI.EndDisabledGroup ();
