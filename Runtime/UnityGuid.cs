@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 using UnityEngine;
 
 namespace Zenvin.Util {
@@ -72,6 +73,37 @@ namespace Zenvin.Util {
 				}
 			}
 			return true;
+		}
+
+
+		public override string ToString () {
+			if (id == null && id.Length != 16) {
+				return "Empty";
+			}
+			StringBuilder sb = new StringBuilder ();
+
+			sb.AppendFormat ("{0:x2}", id[00]);
+			sb.AppendFormat ("{0:x2}", id[01]);
+			sb.AppendFormat ("{0:x2}", id[02]);
+			sb.AppendFormat ("{0:x2}", id[03]);
+			sb.Append ("-");
+			sb.AppendFormat ("{0:x2}", id[04]);
+			sb.AppendFormat ("{0:x2}", id[05]);
+			sb.Append ("-");
+			sb.AppendFormat ("{0:x2}", id[06]);
+			sb.AppendFormat ("{0:x2}", id[07]);
+			sb.Append ("-");
+			sb.AppendFormat ("{0:x2}", id[08]);
+			sb.AppendFormat ("{0:x2}", id[09]);
+			sb.Append ("-");
+			sb.AppendFormat ("{0:x2}", id[10]);
+			sb.AppendFormat ("{0:x2}", id[11]);
+			sb.AppendFormat ("{0:x2}", id[12]);
+			sb.AppendFormat ("{0:x2}", id[13]);
+			sb.AppendFormat ("{0:x2}", id[14]);
+			sb.AppendFormat ("{0:x2}", id[15]);
+			
+			return sb.ToString ();
 		}
 
 
