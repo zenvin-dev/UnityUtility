@@ -9,8 +9,11 @@ namespace Zenvin.Util {
 		[SerializeField, HideInInspector] private byte[] id;
 
 
+		public bool IsEmpty => id == null || id.Length != 16;
+
+
 		public void GenerateID (bool force = false) {
-			if (id?.Length != 16 || force) {
+			if (IsEmpty || force) {
 				id = Guid.NewGuid ().ToByteArray ();
 			}
 		}
