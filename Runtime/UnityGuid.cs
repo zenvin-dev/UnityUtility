@@ -19,12 +19,29 @@ namespace Zenvin.Util {
 		}
 
 		public void Write (BinaryWriter writer) {
+			if (writer == null) {
+				throw new ArgumentNullException (nameof(writer));
+			}
+			writer.Write (IsEmpty);
+			if (IsEmpty) {
+				return;
+			}
 			for (int i = 0; i < id.Length; i++) {
 				writer.Write (id[i]);
 			}
 		}
 
 		public void Read (BinaryReader reader) {
+			if (reader == null) {
+				throw new ArgumentNullException (nameof (reader));
+			}
+			if (!reader.ReadBoolean()) {
+				id = null;
+				return;
+			}
+			if (IsEmpty) {
+				id = new byte[16];
+			}
 			for (int i = 0; i < 16; i++) {
 				id[i] = reader.ReadByte ();
 			}
