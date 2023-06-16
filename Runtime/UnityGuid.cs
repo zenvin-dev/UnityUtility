@@ -48,6 +48,9 @@ namespace Zenvin.Util {
 		}
 
 		public bool Equals (UnityGuid other) {
+			if (IsEmpty && other.IsEmpty) {
+				return true;
+			}
 			return CompareByteIDs (id, other.id);
 		}
 
