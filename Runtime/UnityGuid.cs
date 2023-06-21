@@ -77,7 +77,7 @@ namespace Zenvin.Util {
 
 
 		public override string ToString () {
-			if (id == null && id.Length != 16) {
+			if (IsEmpty) {
 				return "Empty";
 			}
 			StringBuilder sb = new StringBuilder ();
