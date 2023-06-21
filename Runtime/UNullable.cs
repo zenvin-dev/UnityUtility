@@ -4,6 +4,8 @@ using UnityEngine;
 namespace Zenvin.Util {
 	[Serializable]
 	public struct UNullable<T> where T : struct {
+		public static readonly UNullable<T> Null = new UNullable<T> () { hasValue = false, value = default };
+
 		[SerializeField] private T value;
 		[SerializeField] private bool hasValue;
 
