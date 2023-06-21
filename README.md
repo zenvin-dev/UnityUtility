@@ -1,6 +1,11 @@
 # UnityUtility
 Adds a few base classes to Unity to improve existing Behaviours.
 
+**Dependencies** \
+Since Unity cannot handle package-level Git package dependencies, this has to be added manually:
+- Editor Utility: https://xZenvin/UnityEditorUtility.git
+
+
 ### MonoBehavior
 - Class name spelling changed from BE to AE to fit Unity's other naming schemes
 - Added caching for `Transform` component
