@@ -2,22 +2,22 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Zenvin.EditorUtil;
-using Zenvin.EditorUtil.Table;
+using Zenvin.EditorUtil.GridTable;
 
 namespace Zenvin.Util {
-	public class SerializedTableEditorWindow : EditorWindow, ITableEditorCallbacksExtended {
+	public class SerializedTableEditorWindow : EditorWindow, IGridTableEditorCallbacksExtended {
 
 		private static readonly HashSet<object> rowKeys = new HashSet<object> ();
 		private static readonly HashSet<object> colKeys = new HashSet<object> ();
 		private readonly Rect[] headerButtonPositions = new Rect[2];
 
-		private TableEditor editor;
+		private GridTableEditor editor;
 		private SerializedProperty target;
 		private SerializedTable table;
 
 
-		int ITableEditorCallbacks.ColumnCount => table.ColumnCount;
-		int ITableEditorCallbacks.RowCount => table.RowCount;
+		int IGridTableEditorCallbacks.ColumnCount => table.ColumnCount;
+		int IGridTableEditorCallbacks.RowCount => table.RowCount;
 
 
 		internal static void Open (SerializedProperty prop, GUIContent label = null) {
@@ -47,7 +47,7 @@ namespace Zenvin.Util {
 				return;
 			}
 			if (editor == null) {
-				editor = new TableEditor (this);
+				editor = new GridTableEditor (this);
 			}
 
 			rowKeys.Clear ();
@@ -94,7 +94,7 @@ namespace Zenvin.Util {
 			return false;
 		}
 
-		bool ITableEditorCallbacks.HasCellError (Vector2Int cell) {
+		bool IGridTableEditorCallbacks.HasCellError (Vector2Int cell) {
 			if (cell.x == -1 && cell.y >= 0) {
 				if (TryGetCellProperty (cell, out SerializedProperty prop) && !rowKeys.Add (prop.GetRawValue ())) {
 					return true;
@@ -108,14 +108,14 @@ namespace Zenvin.Util {
 			return false;
 		}
 
-		void ITableEditorCallbacks.OnDrawCell (Vector2Int cell, Rect position) {
+		void IGridTableEditorCallbacks.OnDrawCell (Vector2Int cell, Rect position) {
 			if (TryGetCellProperty (cell, out SerializedProperty prop)) {
 				position = position.CenteredByHeight (EditorGUIUtility.singleLineHeight);
 				EditorGUI.PropertyField (position, prop, GUIContent.none);
 			}
 		}
 
-		void ITableEditorCallbacks.OnDrawColumnHeader (int columnIndex, Rect position) {
+		void IGridTableEditorCallbacks.OnDrawColumnHeader (int columnIndex, Rect position) {
 			EditorGUI.BeginDisabledGroup (Application.isPlaying);
 			if (target.FindPropertyRelative ("columns").TryGetArrayElementAtIndex (columnIndex, out SerializedProperty element)) {
 				GetHeaderControlRects (position, out Rect btn, out position);
@@ -132,7 +132,7 @@ namespace Zenvin.Util {
 			EditorGUI.EndDisabledGroup ();
 		}
 
-		void ITableEditorCallbacks.OnDrawRowHeader (int rowIndex, Rect position) {
+		void IGridTableEditorCallbacks.OnDrawRowHeader (int rowIndex, Rect position) {
 			EditorGUI.BeginDisabledGroup (Application.isPlaying);
 			if (target.FindPropertyRelative ("rows").TryGetArrayElementAtIndex (rowIndex, out SerializedProperty element)) {
 				GetHeaderControlRects (position, out Rect btn, out position);
@@ -148,7 +148,7 @@ namespace Zenvin.Util {
 			EditorGUI.EndDisabledGroup ();
 		}
 
-		void ITableEditorCallbacksExtended.OnDrawCorner (Rect position) {
+		void IGridTableEditorCallbacksExtended.OnDrawCorner (Rect position) {
 			EditorGUI.BeginDisabledGroup (Application.isPlaying);
 			position.SplitNonAlloc (RectTransform.Axis.Horizontal, headerButtonPositions);
 			if (GUI.Button (headerButtonPositions[0].Inset (6, 3, 6, 6), "Add Row")) {

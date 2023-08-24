@@ -18,8 +18,8 @@ namespace Zenvin.Util {
 
 		private Dictionary<Key, Vector2Int> values = null;
 
-		[SerializeField, HideInInspector] private List<TColumn> columns = new List<TColumn> ();
-		[SerializeField, HideInInspector] private List<TableRow> rows = new List<TableRow> ();
+		[SerializeField/*, HideInInspector*/] private List<TColumn> columns = new List<TColumn> ();
+		[SerializeField/*, HideInInspector*/] private List<TableRow> rows = new List<TableRow> ();
 
 
 		public sealed override int ColumnCount => columns?.Count ?? 0;
@@ -90,7 +90,7 @@ namespace Zenvin.Util {
 			for (int y = 0; y < RowCount; y++) {
 				var rowCell = rows[y];
 				for (int x = 0; x < rowCell.ValueCount; x++) {
-					var rKey = rows[y].Key;
+					var rKey = rowCell.Key;
 					var cKey = columns[x];
 
 					if ((rKey == null && row != null) || (rKey != null && row == null)) {
