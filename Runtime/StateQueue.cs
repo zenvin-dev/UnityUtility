@@ -30,8 +30,8 @@ namespace Zenvin.Utility {
 			}
 
 			bool added = false;
-			for (int i = 0; i < sources.Count - 1; i++) {
-				if (Equal(source, sources[i])) {
+			for (int i = 0; i < sources.Count; i++) {
+				if (Equal (source, sources[i])) {
 					return false;
 				}
 
@@ -60,10 +60,20 @@ namespace Zenvin.Utility {
 			if (source == null) {
 				return true;
 			}
-			if (source is IActiveStateQueueSource<T> activeSource) {
-				activeSource.StateChanged -= Update;
+			bool removed = false;
+			for (int i = 0; i < sources.Count; i++) {
+				if (!Equal (source, sources[i])) {
+					continue;
+				}
+
+				if (sources[i] is IActiveStateQueueSource<T> activeSource) {
+					activeSource.StateChanged -= Update;
+				}
+
+				sources.RemoveAt (i);
+				removed = true;
+				break;
 			}
-			bool removed = sources.Remove (source);
 			if (removed) {
 				Update ();
 			}
