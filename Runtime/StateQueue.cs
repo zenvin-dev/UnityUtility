@@ -126,11 +126,8 @@ namespace Zenvin.Utility {
 					sources[i].Update (Target, ref current);
 				}
 			}
-			if (Current == null && current != null || !Current.Equals (current)) {
-				Target?.StateChanged (Current, current);
-				if (Target is IInformedStateQueueTarget<T> info) {
-					info.StateChanged (this, Current, current);
-				}
+			if ((Current == null && current != null) || !Current.Equals (current)) {
+				Target?.StateChanged (new StateQueueChangedArgs<T>(this, Current, current));
 				Current = current;
 			}
 		}
@@ -173,11 +170,7 @@ namespace Zenvin.Utility {
 	}
 
 	public interface IStateQueueTarget<T> {
-		void StateChanged (T previous, T current);
-	}
-
-	public interface IInformedStateQueueTarget<T> : IStateQueueTarget<T> {
-		void StateChanged (StateQueue<T> origin, T previous, T current);
+		void StateChanged (StateQueueChangedArgs<T> args);
 	}
 
 	public interface IStateQueueSource<T> {
@@ -187,5 +180,20 @@ namespace Zenvin.Utility {
 
 	public interface IActiveStateQueueSource<T> : IStateQueueSource<T> {
 		event Action StateChanged;
+	}
+
+	public class StateQueueChangedArgs<T> {
+		public readonly StateQueue<T> Origin;
+		public readonly T Previous;
+		public readonly T Current;
+
+
+		private StateQueueChangedArgs () { }
+
+		internal StateQueueChangedArgs (StateQueue<T> origin, T previous, T current) {
+			Origin = origin;
+			Previous = previous;
+			Current = current;
+		}
 	}
 }
