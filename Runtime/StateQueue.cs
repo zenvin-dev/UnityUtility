@@ -2,14 +2,35 @@
 using System.Collections.Generic;
 
 namespace Zenvin.Utility {
+	/// <summary>
+	/// Wrapper for a state variable that can be influenced by multiple parties at once.<br></br>
+	/// Each of those parties is represented by an <see cref="IStateQueueSource{T}"/> instance.
+	/// </summary>
+	/// <typeparam name="T"> The type of value wrapped by the queue. </typeparam>
 	public class StateQueue<T> {
 		private readonly List<IStateQueueSource<T>> sources;
 		private T defaultValue;
 
+		/// <summary>
+		/// A target that gets passed to sources during value changes, and also gets notified when the queue's value changes post update.<br></br>
+		/// Intended to be set to the object holding the queue instance. May be <see langword="null"/>.
+		/// </summary>
 		public IStateQueueTarget<T> Target { get; set; }
+
+		/// <summary>
+		/// Comparer for source instances. Default equality will be used if this is left <see langword="null"/>.<br></br>
+		/// Used during <see cref="AddSource(IStateQueueSource{T})"/> to make sure the same source does not get added multiple times.<br></br>
+		/// Used during <see cref="RemoveSource(IStateQueueSource{T})"/> and <see cref="RemoveSources(IStateQueueSource{T})"/> to find source(s) to remove.
+		/// </summary>
 		public IEqualityComparer<IStateQueueSource<T>> SourceComparer { get; set; }
+
+		/// <summary> The default value of the queue. Will be used as a starting point each time the queue's influencing parties change. </summary>
 		public T Default { get => defaultValue; set => SetDefault (value); }
+
+		/// <summary> The current value of the queue. </summary>
 		public T Current { get; private set; }
+
+		/// <summary> The number of <see cref="IStateQueueSource{T}"/> objects added to the queue. </summary>
 		public int Count => sources.Count;
 
 
@@ -24,6 +45,12 @@ namespace Zenvin.Utility {
 		}
 
 
+		/// <summary>
+		/// Attempts to add a <see cref="IStateQueueSource{T}"/> to the queue.<br></br>
+		/// Will fail if the source already was added previously, or the value is <see langword="null"/>.
+		/// </summary>
+		/// <param name="source"> The source to add. </param>
+		/// <returns> Whether the source was added successfully. </returns>
 		public bool AddSource (IStateQueueSource<T> source) {
 			if (source == null) {
 				return false;
@@ -56,6 +83,12 @@ namespace Zenvin.Utility {
 			return true;
 		}
 
+		/// <summary>
+		/// Attempts to remove a <see cref="IStateQueueSource{T}"/> from the queue.<br></br>
+		/// Will fail if the source does not exist in the queue, or the value is <see langword="null"/>.
+		/// </summary>
+		/// <param name="source"> The source to remove. </param>
+		/// <returns> Whether the source was removed successfully. </returns>
 		public bool RemoveSource (IStateQueueSource<T> source) {
 			if (source == null) {
 				return true;
@@ -80,6 +113,11 @@ namespace Zenvin.Utility {
 			return removed;
 		}
 
+		/// <summary>
+		/// Removes all instances matching the given <paramref name="source"/> from the queue.
+		/// </summary>
+		/// <param name="source"> The source to remove. </param>
+		/// <returns> The number of sources removed. </returns>
 		public int RemoveSources (IStateQueueSource<T> source) {
 			if (source == null) {
 				return 0;
@@ -108,6 +146,9 @@ namespace Zenvin.Utility {
 			return removed;
 		}
 
+		/// <summary>
+		/// Removes all sources from the queue and resets the current value to the default.
+		/// </summary>
 		public void ClearSources () {
 			for (int i = 0; i < sources.Count; i++) {
 				if (sources[i] is IActiveStateQueueSource<T> activeSource) {
@@ -119,6 +160,9 @@ namespace Zenvin.Utility {
 			Update ();
 		}
 
+		/// <summary>
+		/// Updates the queue's current value, based on all sources added to the queue.
+		/// </summary>
 		public void Update () {
 			var current = Default;
 			for (int i = sources.Count - 1; i >= 0; i--) {
