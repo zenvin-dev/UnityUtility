@@ -7,6 +7,7 @@ namespace Zenvin.Utility {
 		private T defaultValue;
 
 		public IStateQueueTarget<T> Target { get; set; }
+		public IEqualityComparer<IStateQueueSource<T>> EqualityComparer { get; set; }
 		public T Default { get => defaultValue; set => SetDefault (value); }
 		public T Current { get; private set; }
 		public int Count => sources.Count;
@@ -24,11 +25,20 @@ namespace Zenvin.Utility {
 
 
 		public bool AddSource (IStateQueueSource<T> source) {
-			if (source == null || sources.Contains (source)) {
+			if (source == null) {
 				return false;
 			}
+
 			bool added = false;
 			for (int i = 0; i < sources.Count - 1; i++) {
+				if (Equal(source, sources[i])) {
+					return false;
+				}
+
+				if (i == sources.Count - 1) {
+					break;
+				}
+
 				if (sources[i + 1].StateQueueOrder < source.StateQueueOrder) {
 					sources.Insert (i, source);
 					added = true;
@@ -106,6 +116,13 @@ namespace Zenvin.Utility {
 			}
 			defaultValue = value;
 			Update ();
+		}
+
+		private bool Equal (IStateQueueSource<T> x, IStateQueueSource<T> y) {
+			if (EqualityComparer != null) {
+				return EqualityComparer.Equals (x, y);
+			}
+			return x == y;
 		}
 
 
