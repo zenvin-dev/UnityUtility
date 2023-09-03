@@ -7,7 +7,7 @@ namespace Zenvin.Utility {
 		private T defaultValue;
 
 		public IStateQueueTarget<T> Target { get; set; }
-		public IEqualityComparer<IStateQueueSource<T>> EqualityComparer { get; set; }
+		public IEqualityComparer<IStateQueueSource<T>> SourceComparer { get; set; }
 		public T Default { get => defaultValue; set => SetDefault (value); }
 		public T Current { get; private set; }
 		public int Count => sources.Count;
@@ -129,8 +129,8 @@ namespace Zenvin.Utility {
 		}
 
 		private bool Equal (IStateQueueSource<T> x, IStateQueueSource<T> y) {
-			if (EqualityComparer != null) {
-				return EqualityComparer.Equals (x, y);
+			if (SourceComparer != null) {
+				return SourceComparer.Equals (x, y);
 			}
 			return x == y;
 		}
