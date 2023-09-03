@@ -80,6 +80,34 @@ namespace Zenvin.Utility {
 			return removed;
 		}
 
+		public int RemoveSources (IStateQueueSource<T> source) {
+			if (source == null) {
+				return 0;
+			}
+
+			int removed = 0;
+
+			for (int i = sources.Count - 1; i >= 0; i--) {
+				if (!Equal(source, sources[i])) {
+					continue;
+				}
+
+				if (sources[i] is IActiveStateQueueSource<T> activeSource) {
+					activeSource.StateChanged -= Update;
+				}
+
+				sources.RemoveAt (i);
+				removed++;
+				i--;
+			}
+
+			if (removed > 0) {
+				Update ();
+			}
+
+			return removed;
+		}
+
 		public void ClearSources () {
 			for (int i = 0; i < sources.Count; i++) {
 				if (sources[i] is IActiveStateQueueSource<T> activeSource) {
