@@ -3,7 +3,7 @@ Adds a few base classes to Unity to improve existing Behaviours.
 
 **Dependencies** \
 Since Unity cannot handle package-level Git package dependencies, this has to be added manually:
-- Editor Utility: https://xZenvin/UnityEditorUtility.git
+- Editor Utility: https://github.com/xZenvin/UnityEditorUtility.git
 
 
 ### MonoBehavior
