@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Zenvin.Utility {
 	/// <summary>
@@ -7,9 +8,10 @@ namespace Zenvin.Utility {
 	/// Each of those parties is represented by an <see cref="IStateQueueSource{T}"/> instance.
 	/// </summary>
 	/// <typeparam name="T"> The type of value wrapped by the queue. </typeparam>
+	[Serializable]
 	public class StateQueue<T> {
 		private readonly List<IStateQueueSource<T>> sources;
-		private T defaultValue;
+		[SerializeField] private T defaultValue;
 
 		/// <summary>
 		/// A target that gets passed to sources during value changes, and also gets notified when the queue's value changes post update.<br></br>

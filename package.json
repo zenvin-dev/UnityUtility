@@ -1,6 +1,6 @@
 {
 	"name": "com.zenvin.unity-utility",
-	"version": "1.1.4",
+	"version": "1.1.5",
 	"displayName": "Unity Utility",
 	"description": "Improves some of Unity's native Behaviour classes and adds new utility.",
 	"unity": "2018.3",
