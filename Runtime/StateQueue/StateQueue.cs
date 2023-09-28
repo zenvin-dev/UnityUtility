@@ -9,14 +9,15 @@ namespace Zenvin.Utility {
 	/// </summary>
 	/// <typeparam name="T"> The type of value wrapped by the queue. </typeparam>
 	[Serializable]
-	public class StateQueue<T> {
+	public class StateQueue<T> : IStateQueue<T> {
+
 		private readonly List<IStateQueueSource<T>> sources;
 		[SerializeField] private T defaultValue;
 
-		/// <summary>
-		/// A target that gets passed to sources during value changes, and also gets notified when the queue's value changes post update.<br></br>
-		/// Intended to be set to the object holding the queue instance. May be <see langword="null"/>.
-		/// </summary>
+		/// <inheritdoc/>
+		public event StateQueueChangedHandler<T> ValueChanged;
+
+		/// <inheritdoc/>
 		public IStateQueueTarget<T> Target { get; set; }
 
 		/// <summary>
@@ -26,13 +27,13 @@ namespace Zenvin.Utility {
 		/// </summary>
 		public IEqualityComparer<IStateQueueSource<T>> SourceComparer { get; set; }
 
-		/// <summary> The default value of the queue. Will be used as a starting point each time the queue's influencing parties change. </summary>
+		/// <inheritdoc/>
 		public T Default { get => defaultValue; set => SetDefault (value); }
 
-		/// <summary> The current value of the queue. </summary>
+		/// <inheritdoc/>
 		public T Current { get; private set; }
 
-		/// <summary> The number of <see cref="IStateQueueSource{T}"/> objects added to the queue. </summary>
+		/// <inheritdoc/>
 		public int Count => sources.Count;
 
 
@@ -162,9 +163,7 @@ namespace Zenvin.Utility {
 			Update ();
 		}
 
-		/// <summary>
-		/// Updates the queue's current value, based on all sources added to the queue.
-		/// </summary>
+		/// <inheritdoc/>
 		public void Update () {
 			var current = Default;
 			for (int i = sources.Count - 1; i >= 0; i--) {
@@ -173,7 +172,9 @@ namespace Zenvin.Utility {
 				}
 			}
 			if ((Current == null && current != null) || !Current.Equals (current)) {
-				Target?.StateChanged (new StateQueueChangedArgs<T>(this, Current, current));
+				var args = new StateQueueChangedArgs<T> (this, Current, current);
+				Target?.StateChanged (args);
+				ValueChanged?.Invoke (args);
 				Current = current;
 			}
 		}
@@ -226,20 +227,5 @@ namespace Zenvin.Utility {
 
 	public interface IActiveStateQueueSource<T> : IStateQueueSource<T> {
 		event Action StateChanged;
-	}
-
-	public class StateQueueChangedArgs<T> {
-		public readonly StateQueue<T> Origin;
-		public readonly T Previous;
-		public readonly T Current;
-
-
-		private StateQueueChangedArgs () { }
-
-		internal StateQueueChangedArgs (StateQueue<T> origin, T previous, T current) {
-			Origin = origin;
-			Previous = previous;
-			Current = current;
-		}
 	}
 }
