@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Zenvin.Utility {
+namespace Zenvin.Util {
 	public delegate void ProcessQueueState<T> (IStateQueueTarget<T> target, ref T value);
 
 	public class EventBasedStateQueue<T> : IStateQueue<T> {

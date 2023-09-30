@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Zenvin.Utility {
+namespace Zenvin.Util {
 	/// <summary>
 	/// Wrapper for a state variable that can be influenced by multiple parties at once.<br></br>
 	/// Each of those parties is represented by an <see cref="IStateQueueSource{T}"/> instance.

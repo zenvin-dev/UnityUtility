@@ -1,4 +1,4 @@
-﻿namespace Zenvin.Utility {
+﻿namespace Zenvin.Util {
 	/// <summary>
 	/// Event handler for <see cref="IStateQueue{T}"/> value changes.
 	/// </summary>

@@ -1,4 +1,4 @@
-﻿namespace Zenvin.Utility {
+﻿namespace Zenvin.Util {
 	public class StateQueueChangedArgs<T> {
 		public readonly IStateQueue<T> Origin;
 		public readonly T Previous;
