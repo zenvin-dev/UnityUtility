@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Zenvin.Util {
 	public delegate void ProcessQueueState<T> (IStateQueueTarget<T> target, ref T value);
 
+	[Serializable]
 	public class EventBasedStateQueue<T> : IStateQueue<T> {
 
 		private readonly List<EventQueueEntry<T>> entries = new List<EventQueueEntry<T>> ();
