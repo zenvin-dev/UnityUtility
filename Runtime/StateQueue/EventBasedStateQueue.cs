@@ -5,6 +5,11 @@ using UnityEngine;
 namespace Zenvin.Util {
 	public delegate void ProcessQueueState<T> (IStateQueueTarget<T> target, ref T value);
 
+	/// <summary>
+	/// Wrapper for a state variable that can be influenced by multiple parties at once.<br></br>
+	/// Each of those parties is represented by an <see cref="EventQueueEntry{T}"/>.
+	/// </summary>
+	/// <typeparam name="T"> The type of value wrapped by the queue. </typeparam>
 	[Serializable]
 	public class EventBasedStateQueue<T> : IStateQueue<T> {
 
@@ -102,5 +107,18 @@ namespace Zenvin.Util {
 
 		public readonly int Order;
 		public readonly ProcessQueueState<T> Callback;
+
+
+		public EventQueueEntry (ProcessQueueState<T> callback) : this (0, callback) { }
+
+		public EventQueueEntry (int order, ProcessQueueState<T> callback) : this () {
+			Order = order;
+			Callback = callback;
+		}
+
+
+		public static implicit operator EventQueueEntry<T> ((int order, ProcessQueueState<T> callback) data) {
+			return new EventQueueEntry<T> (data.order, data.callback);
+		}
 	}
 }
