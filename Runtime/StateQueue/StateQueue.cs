@@ -57,6 +57,17 @@ namespace Zenvin.Util {
 		/// <param name="source"> The source to add. </param>
 		/// <returns> Whether the source was added successfully. </returns>
 		public bool AddSource (IStateQueueSource<T> source) {
+			return AddSource (source, false);
+		}
+
+		/// <summary>
+		/// Attempts to add a <see cref="IStateQueueSource{T}"/> to the queue.<br></br>
+		/// Will fail if the source already was added previously, or the value is <see langword="null"/>.
+		/// </summary>
+		/// <param name="source"> The source to add. </param>
+		/// <param name="suppressUpdate"> If true, the queue's current value will not automatically be updated. Useful if multiple sources are to be added. </param>
+		/// <returns> Whether the source was added successfully. </returns>
+		public bool AddSource (IStateQueueSource<T> source, bool suppressUpdate) {
 			if (source == null) {
 				return false;
 			}
@@ -81,7 +92,9 @@ namespace Zenvin.Util {
 				sources.Add (source);
 			}
 
-			Update ();
+			if (!suppressUpdate) {
+				Update ();
+			}
 			if (source is IActiveStateQueueSource<T> activeSource) {
 				activeSource.StateChanged += Update;
 			}
@@ -95,6 +108,17 @@ namespace Zenvin.Util {
 		/// <param name="source"> The source to remove. </param>
 		/// <returns> Whether the source was removed successfully. </returns>
 		public bool RemoveSource (IStateQueueSource<T> source) {
+			return RemoveSource (source, false);
+		}
+
+		/// <summary>
+		/// Attempts to remove a <see cref="IStateQueueSource{T}"/> from the queue.<br></br>
+		/// Will fail if the source does not exist in the queue, or the value is <see langword="null"/>.
+		/// </summary>
+		/// <param name="source"> The source to remove. </param>
+		/// <param name="suppressUpdate"> If true, the queue's current value will not automatically be updated. Useful if multiple sources are to be removed. </param>
+		/// <returns> Whether the source was removed successfully. </returns>
+		public bool RemoveSource (IStateQueueSource<T> source, bool suppressUpdate) {
 			if (source == null) {
 				return true;
 			}
@@ -112,7 +136,7 @@ namespace Zenvin.Util {
 				removed = true;
 				break;
 			}
-			if (removed) {
+			if (removed && !suppressUpdate) {
 				Update ();
 			}
 			return removed;

@@ -32,7 +32,26 @@ namespace Zenvin.Util {
 		public int Count => entries.Count;
 
 
+		/// <summary>
+		/// Attempts to add an <see cref="EventQueueEntry{T}"/> to the queue.<br></br>
+		/// Will fail if the entry already was added previously, or the value's callback is <see langword="null"/>.
+		/// </summary>
+		/// <param name="entry"> The entry to add. </param>
+		/// <param name="suppressUpdate"> If true, the queue's current value will not automatically be updated. Useful if multiple sources are to be added. </param>
+		/// <returns> Whether the entry was added successfully. </returns>
 		public bool AddSource (EventQueueEntry<T> entry, out uint handle) {
+			return AddSource (entry, out handle, false);
+		}
+
+		/// <summary>
+		/// Attempts to add an <see cref="EventQueueEntry{T}"/> to the queue.<br></br>
+		/// Will fail if the entry already was added previously, or the value's callback is <see langword="null"/>.
+		/// </summary>
+		/// <param name="entry"> The entry to add. </param>
+		/// <param name="handle"> The handle under which the entry was added. Must be used to remove the entry. </param>
+		/// <param name="suppressUpdate"> If true, the queue's current value will not automatically be updated. Useful if multiple entries are to be added. </param>
+		/// <returns> Whether the entry was added successfully. </returns>
+		public bool AddSource (EventQueueEntry<T> entry, out uint handle, bool suppressUpdate) {
 			if (entry.Callback == null) {
 				handle = 0;
 				return false;
@@ -58,15 +77,36 @@ namespace Zenvin.Util {
 				entries.Add (entry);
 			}
 
-			Update ();
+			if (!suppressUpdate) {
+				Update ();
+			}
 			return true;
 		}
 
+		/// <summary>
+		/// Attempts to remove an <see cref="EventQueueEntry{T}"/> from the queue by its handle.<br></br>
+		/// Will fail if the entry's handle does not exist in the queue.
+		/// </summary>
+		/// <param name="handle"> The handle of the entry to remove. </param>.
+		/// <returns> Whether the source was removed successfully. </returns>
 		public bool RemoveSource (uint handle) {
+			return RemoveSource (handle, false);
+		}
+
+		/// <summary>
+		/// Attempts to remove an <see cref="EventQueueEntry{T}"/> from the queue by its handle.<br></br>
+		/// Will fail if the entry's handle does not exist in the queue.
+		/// </summary>
+		/// <param name="handle"> The handle of the entry to remove. </param>.
+		/// <param name="suppressUpdate"> If true, the queue's current value will not automatically be updated. Useful if multiple entries are to be removed. </param>
+		/// <returns> Whether the source was removed successfully. </returns>
+		public bool RemoveSource (uint handle, bool suppressUpdate) {
 			for (int i = 0; i < entries.Count; i++) {
 				if (entries[i].Handle == handle) {
 					entries.RemoveAt (i);
-					Update ();
+					if (!suppressUpdate) {
+						Update ();
+					}
 					return true;
 				}
 			}
