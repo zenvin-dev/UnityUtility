@@ -38,5 +38,9 @@
 		/// Updates the queue's current value, based on all parties influencing the queue.
 		/// </summary>
 		void Update ();
+		/// <summary>
+		/// Removes all influencing parties from the queue and resets its current value to the queue's default.
+		/// </summary>
+		void ClearSources ();
 	}
 }

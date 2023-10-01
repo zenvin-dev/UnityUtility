@@ -72,9 +72,12 @@ namespace Zenvin.Util {
 			return false;
 		}
 
+		/// <inheritdoc/>
 		public void ClearSources () {
-			entries.Clear ();
-			Update ();
+			if (entries.Count > 0) {
+				entries.Clear ();
+				Update ();
+			}
 		}
 
 		/// <inheritdoc/>

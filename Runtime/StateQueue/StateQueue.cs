@@ -149,10 +149,11 @@ namespace Zenvin.Util {
 			return removed;
 		}
 
-		/// <summary>
-		/// Removes all sources from the queue and resets the current value to the default.
-		/// </summary>
+		/// <inheritdoc/>
 		public void ClearSources () {
+			if (sources.Count == 0)
+				return;
+
 			for (int i = 0; i < sources.Count; i++) {
 				if (sources[i] is IActiveStateQueueSource<T> activeSource) {
 					activeSource.StateChanged -= Update;
