@@ -12,8 +12,9 @@
 	/// <typeparam name="T">The type of value represented by the queue.</typeparam>
 	public interface IStateQueue<T> {
 		/// <summary>
-		/// An event that is invoked every time the queue's value is changed.<br></br>
+		/// An event that is invoked every time the queue's current value is changed.<br></br>
 		/// </summary>
+		/// <seealso cref="Update"/>
 		public event OnStateQueueChanged<T> ValueChanged;
 
 		/// <summary>
@@ -22,8 +23,9 @@
 		/// </summary>
 		IStateQueueTarget<T> Target { get; set; }
 		/// <summary>
-		/// The default value of the queue. Will be used as a starting point each time the queue's influencing parties change.
+		/// The default value of the queue. Will be used as a starting point each time the queue's current value is updated.
 		/// </summary>
+		/// <seealso cref="Update"/>
 		T Default { get; set; }
 		/// <summary>
 		/// The current value of the queue.
@@ -42,5 +44,10 @@
 		/// Removes all influencing parties from the queue and resets its current value to the queue's default.
 		/// </summary>
 		void ClearSources ();
+		/// <summary>
+		/// Sets the queue's default value and updates its current value, in case the default value changed.
+		/// </summary>
+		/// <param name="value"> The new default value. </param>
+		void SetDefault (T value);
 	}
 }

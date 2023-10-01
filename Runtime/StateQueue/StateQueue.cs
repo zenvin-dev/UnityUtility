@@ -30,7 +30,7 @@ namespace Zenvin.Util {
 		public IEqualityComparer<IStateQueueSource<T>> SourceComparer { get; set; }
 
 		/// <inheritdoc/>
-		public T Default { get => defaultValue; set => SetDefault (value); }
+		public T Default { get => defaultValue; set => defaultValue = value; }
 
 		/// <inheritdoc/>
 		public T Current { get => Count == 0 ? Default : currentValue; private set => currentValue = value; }
@@ -206,6 +206,14 @@ namespace Zenvin.Util {
 			}
 		}
 
+		/// <inheritdoc/>
+		public void SetDefault (T value) {
+			if ((value == null && defaultValue == null) || (value != null && value.Equals (defaultValue))) {
+				return;
+			}
+			defaultValue = value;
+			Update ();
+		}
 
 		public override string ToString () {
 			if (Current == null) {
@@ -218,14 +226,6 @@ namespace Zenvin.Util {
 			return includeStateHint ? $"StateQueue<{typeof (T).FullName}>: {ToString ()}" : ToString ();
 		}
 
-
-		private void SetDefault (T value) {
-			if ((value == null && defaultValue == null) || (value != null && value.Equals (defaultValue))) {
-				return;
-			}
-			defaultValue = value;
-			Update ();
-		}
 
 		private bool Equal (IStateQueueSource<T> x, IStateQueueSource<T> y) {
 			if (SourceComparer != null) {

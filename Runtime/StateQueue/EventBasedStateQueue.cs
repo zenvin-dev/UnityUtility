@@ -25,7 +25,7 @@ namespace Zenvin.Util {
 		/// <inheritdoc/>
 		public IStateQueueTarget<T> Target { get; set; }
 		/// <inheritdoc/>
-		public T Default { get => defaultValue; set => SetDefault (value); }
+		public T Default { get => defaultValue; set => defaultValue = value; }
 		/// <inheritdoc/>
 		public T Current { get => Count == 0 ? Default : currentValue; private set => currentValue = value; }
 		/// <inheritdoc/>
@@ -135,8 +135,8 @@ namespace Zenvin.Util {
 			}
 		}
 
-
-		private void SetDefault (T value) {
+		/// <inheritdoc/>
+		public void SetDefault (T value) {
 			if ((value == null && defaultValue == null) || (value != null && value.Equals (defaultValue))) {
 				return;
 			}

@@ -14,12 +14,11 @@ namespace Zenvin.Util {
 			}
 
 			position = PropertyDrawerUtility.DrawInfo (
-				position, "This field represents the default value of a StateQueue. It cannot be changed at runtime, and does not inform about the queue's current value."
+				position,
+				"This field represents the default value of a StateQueue. Changing the value will NOT update the queue's current value on its own."
 			);
 
-			EditorGUI.BeginDisabledGroup (Application.isPlaying);
 			EditorGUI.PropertyField (position, prop, label);
-			EditorGUI.EndDisabledGroup ();
 		}
 
 	}
