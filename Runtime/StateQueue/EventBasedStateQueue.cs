@@ -19,7 +19,7 @@ namespace Zenvin.Util {
 		[SerializeField] private T defaultValue;
 
 		/// <inheritdoc/>
-		public event StateQueueChangedHandler<T> ValueChanged;
+		public event OnStateQueueChanged<T> ValueChanged;
 
 		/// <inheritdoc/>
 		public IStateQueueTarget<T> Target { get; set; }

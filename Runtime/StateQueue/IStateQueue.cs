@@ -1,10 +1,10 @@
 ﻿namespace Zenvin.Util {
 	/// <summary>
-	/// Event handler for <see cref="IStateQueue{T}"/> value changes.
+	/// Event type for <see cref="IStateQueue{T}"/> value changes.
 	/// </summary>
 	/// <typeparam name="T">The type of value represented by the queue.</typeparam>
 	/// <param name="args">Information about the change that occurred.</param>
-	public delegate void StateQueueChangedHandler<T> (StateQueueChangedArgs<T> args);
+	public delegate void OnStateQueueChanged<T> (StateQueueChangedArgs<T> args);
 
 	/// <summary>
 	/// An interface common to all variations of a state queue.
@@ -12,9 +12,9 @@
 	/// <typeparam name="T">The type of value represented by the queue.</typeparam>
 	public interface IStateQueue<T> {
 		/// <summary>
-		/// An event that is invoked every time the queue's value is changed.
+		/// An event that is invoked every time the queue's value is changed.<br></br>
 		/// </summary>
-		public event StateQueueChangedHandler<T> ValueChanged;
+		public event OnStateQueueChanged<T> ValueChanged;
 
 		/// <summary>
 		/// A target that gets passed to sources during value changes, and also gets notified when the queue's value changes post update.<br></br>
