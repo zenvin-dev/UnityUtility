@@ -12,6 +12,8 @@ namespace Zenvin.Util {
 	public class StateQueue<T> : IStateQueue<T> {
 
 		private readonly List<IStateQueueSource<T>> sources;
+		private T currentValue;
+
 		[SerializeField] private T defaultValue;
 
 		/// <inheritdoc/>
@@ -31,7 +33,7 @@ namespace Zenvin.Util {
 		public T Default { get => defaultValue; set => SetDefault (value); }
 
 		/// <inheritdoc/>
-		public T Current { get; private set; }
+		public T Current { get => Count == 0 ? Default : currentValue; private set => currentValue = value; }
 
 		/// <inheritdoc/>
 		public int Count => sources.Count;

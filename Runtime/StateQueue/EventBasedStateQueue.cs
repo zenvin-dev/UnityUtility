@@ -15,6 +15,7 @@ namespace Zenvin.Util {
 
 		private readonly List<EventQueueEntry<T>> entries = new List<EventQueueEntry<T>> ();
 		private uint lastHandle = 1;
+		private T currentValue;
 
 		[SerializeField] private T defaultValue;
 
@@ -26,7 +27,7 @@ namespace Zenvin.Util {
 		/// <inheritdoc/>
 		public T Default { get => defaultValue; set => SetDefault (value); }
 		/// <inheritdoc/>
-		public T Current { get; private set; }
+		public T Current { get => Count == 0 ? Default : currentValue; private set => currentValue = value; }
 		/// <inheritdoc/>
 		public int Count => entries.Count;
 
