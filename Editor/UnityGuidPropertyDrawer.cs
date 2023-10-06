@@ -24,7 +24,7 @@ namespace Zenvin.Util {
 				bytes[i] = (byte)property.GetArrayElementAtIndex (i).intValue;
 			}
 
-			EditorGUI.LabelField (position, new Guid(bytes).ToString(), EditorStyles.helpBox);
+			EditorGUI.LabelField (position, new UnityGuid(bytes).ToString(), EditorStyles.helpBox);
 		}
 
 	}
