@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace Zenvin.Util {
-	[CustomPropertyDrawer (typeof (UNullable<>))]
+	[CustomPropertyDrawer (typeof (UnityNullable<>))]
 	public class NullablePropertyDrawer : PropertyDrawer {
 
 		private static GUIContent addContent;
