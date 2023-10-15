@@ -101,6 +101,10 @@ namespace Zenvin.Util {
 		/// <param name="suppressUpdate"> If true, the queue's current value will not automatically be updated. Useful if multiple entries are to be removed. </param>
 		/// <returns> Whether the source was removed successfully. </returns>
 		public bool RemoveSource (uint handle, bool suppressUpdate) {
+			if (handle == 0) {
+				return true;
+			}
+
 			for (int i = 0; i < entries.Count; i++) {
 				if (entries[i].Handle == handle) {
 					entries.RemoveAt (i);
