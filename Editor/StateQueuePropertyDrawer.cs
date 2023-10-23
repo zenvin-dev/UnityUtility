@@ -8,6 +8,7 @@ namespace Zenvin.Util {
 	public class StateQueuePropertyDrawer : PropertyDrawer {
 
 		public override void OnGUI (Rect position, SerializedProperty property, GUIContent label) {
+			label = EditorGUI.BeginProperty (position, label, property);
 			var prop = property.FindPropertyRelative ("defaultValue");
 			if (prop == null) {
 				return;
@@ -19,6 +20,7 @@ namespace Zenvin.Util {
 			);
 
 			EditorGUI.PropertyField (position, prop, label);
+			EditorGUI.EndProperty ();
 		}
 
 	}

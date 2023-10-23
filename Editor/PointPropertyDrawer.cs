@@ -15,6 +15,7 @@ namespace Zenvin.Util {
 
 
 		public override void OnGUI (Rect position, SerializedProperty property, GUIContent label) {
+			label = EditorGUI.BeginProperty (position, label, property);
 			position = EditorGUI.PrefixLabel (position, label);
 
 			var btn = new Rect (position);
@@ -32,6 +33,7 @@ namespace Zenvin.Util {
 			EditorGUI.PropertyField (position, property.FindPropertyRelative (modeProp.boolValue ? "obj" : "pos"), GUIContent.none);
 
 			property.serializedObject.ApplyModifiedProperties ();
+			EditorGUI.EndProperty ();
 		}
 
 		public override float GetPropertyHeight (SerializedProperty property, GUIContent label) {

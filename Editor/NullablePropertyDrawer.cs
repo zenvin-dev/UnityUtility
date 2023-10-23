@@ -14,6 +14,8 @@ namespace Zenvin.Util {
 		private static GUIStyle BtnStyle => btnStyle == null ? (btnStyle = new GUIStyle (GUI.skin.button) { padding = new RectOffset () }) : btnStyle;
 
 		public override void OnGUI (Rect position, SerializedProperty property, GUIContent label) {
+			label = EditorGUI.BeginProperty (position, label, property);
+
 			var valueProp = property.FindPropertyRelative ("value");
 			var hasValueProp = property.FindPropertyRelative ("hasValue");
 
@@ -38,6 +40,7 @@ namespace Zenvin.Util {
 			}
 
 			property.serializedObject.ApplyModifiedProperties ();
+			EditorGUI.EndProperty ();
 		}
 
 	}

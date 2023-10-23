@@ -1,6 +1,5 @@
 using UnityEditor;
 using UnityEngine;
-using System;
 
 namespace Zenvin.Util {
 	[CustomPropertyDrawer (typeof (UnityGuid))]
