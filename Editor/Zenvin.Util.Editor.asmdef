@@ -3,7 +3,8 @@
     "rootNamespace": "Zenvin.Util",
     "references": [
         "GUID:518bd1b3f45b6914aaaa3943e80cf56d",
-        "GUID:43e07366a3b322442ab7e131ca368d69"
+        "GUID:43e07366a3b322442ab7e131ca368d69",
+        "GUID:c252fd65bae31db4db8b79a863571ce7"
     ],
     "includePlatforms": [
         "Editor"
