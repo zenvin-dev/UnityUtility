@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using Zenvin.EditorUtil;
 
 namespace Zenvin.Util {
 	[CustomPropertyDrawer (typeof (SerializedTable<,,>))]
