@@ -238,19 +238,21 @@ namespace Zenvin.Util {
 
 			Vector3[] ret = new Vector3[4];
 
-			ret[0] = pos + fwd * dist + up * height * 0.5f + right * width * 0.5f;    //top right
-			ret[1] = pos + fwd * dist + up * height * 0.5f - right * width * 0.5f;    //top left
-			ret[2] = pos + fwd * dist - up * height * 0.5f - right * width * 0.5f;    //bottom left
-			ret[3] = pos + fwd * dist - up * height * 0.5f + right * width * 0.5f;    //bottom right
+			ret[0] = pos + fwd * dist + up * (height * 0.5f) + right * (width * 0.5f);    //top right
+			ret[1] = pos + fwd * dist + up * (height * 0.5f) - right * (width * 0.5f);    //top left
+			ret[2] = pos + fwd * dist - up * (height * 0.5f) - right * (width * 0.5f);    //bottom left
+			ret[3] = pos + fwd * dist - up * (height * 0.5f) + right * (width * 0.5f);    //bottom right
 
 			return ret;
 		}
 
 
 
-#if UNITY_EDITOR
 		public void DrawFrustum () {
-			Gizmos.color = Color.gray;
+#if UNITY_EDITOR
+			if (innerFrustum == null || outerFrustum == null || innerFrustum.Length < 4 || outerFrustum.Length < 4) {
+				return;
+			}
 
 			Gizmos.DrawLine (innerFrustum[0], innerFrustum[1]);
 			Gizmos.DrawLine (innerFrustum[1], innerFrustum[2]);
@@ -266,13 +268,15 @@ namespace Zenvin.Util {
 			Gizmos.DrawLine (innerFrustum[1], outerFrustum[1]);
 			Gizmos.DrawLine (innerFrustum[2], outerFrustum[2]);
 			Gizmos.DrawLine (innerFrustum[3], outerFrustum[3]);
+#endif
 		}
 
 		public void DrawPointCheck (Vector3 point, LayerMask? layers = null, QueryTriggerInteraction triggerInteraction = QueryTriggerInteraction.Ignore) {
+#if UNITY_EDITOR
 			Gizmos.color = PointVisible (point, layers, triggerInteraction) ? Color.cyan : Color.yellow;
 			Gizmos.DrawLine (position + forward * nearClipPlane, point);
-		}
 #endif
+		}
 
 	}
 
