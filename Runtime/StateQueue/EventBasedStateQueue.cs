@@ -32,6 +32,23 @@ namespace Zenvin.Util {
 		public int Count => entries.Count;
 
 
+		public EventBasedStateQueue () { }
+
+		public EventBasedStateQueue (IStateQueueTarget<T> target) {
+			Target = target;
+		}
+
+		public EventBasedStateQueue (IStateQueueTarget<T> target, T @default) : this (target) {
+			Default = @default;
+			Current = @default;
+		}
+
+		public EventBasedStateQueue (T @default) {
+			Default = @default;
+			Current = @default;
+		}
+
+
 		/// <summary>
 		/// Attempts to add an <see cref="EventQueueEntry{T}"/> to the queue.<br></br>
 		/// Will fail if the entry already was added previously, or the value's callback is <see langword="null"/>.
