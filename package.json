@@ -1,6 +1,6 @@
 {
 	"name": "com.zenvin.unity-utility",
-	"version": "1.3.0",
+	"version": "1.4.0",
 	"displayName": "Unity Utility",
 	"description": "Improves some of Unity's native Behaviour classes and adds new utility.",
 	"unity": "2018.3",
@@ -10,6 +10,6 @@
 	},
 	"dependencies": {},
 	"hideInEditor": false,
-	"keywords": [],
+	"keywords": [ "unity", "utility" ],
 	"samples": []
 }
