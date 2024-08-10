@@ -13,17 +13,19 @@
 	public interface IStateQueue<T> {
 		/// <summary>
 		/// An event that is invoked every time the queue's current value is changed.<br></br>
+		/// Should be called after <see cref="Update"/>.
 		/// </summary>
-		/// <seealso cref="Update"/>
 		public event OnStateQueueChanged<T> ValueChanged;
 
 		/// <summary>
-		/// A target that gets passed to sources during value changes, and also gets notified when the queue's value changes post update.<br></br>
+		/// A target that gets passed to manipulators during value changes, and also gets notified when the queue's value changes post update.<br></br>
 		/// Intended to be set to the object holding the queue instance. May be <see langword="null"/>.
 		/// </summary>
 		IStateQueueTarget<T> Target { get; set; }
 		/// <summary>
-		/// The default value of the queue. Will be used as a starting point each time the queue's current value is updated.
+		/// The default value of the queue. Will be used as a starting point each time the queue's current value is updated. <br></br>
+		/// <b>Changing this will NOT automatically update the <see cref="Current"/> value.</b> 
+		/// To automatically update the <see cref="Current"/> value after setting a new <see cref="Default"/>, use <see cref="SetDefault(T)"/>.
 		/// </summary>
 		/// <seealso cref="Update"/>
 		T Default { get; set; }
@@ -32,18 +34,18 @@
 		/// </summary>
 		T Current { get; }
 		/// <summary>
-		/// The number of parties influencing the queue's value.
+		/// The number of manipulators influencing the queue's value.
 		/// </summary>
 		int Count { get; }
 
 		/// <summary>
-		/// Updates the queue's current value, based on all parties influencing the queue.
+		/// Updates the queue's current value, based on all manipulators influencing the queue.
 		/// </summary>
 		void Update ();
 		/// <summary>
-		/// Removes all influencing parties from the queue and resets its current value to the queue's default.
+		/// Removes all influencing manipulators from the queue and resets its current value to the queue's default.
 		/// </summary>
-		void ClearSources ();
+		void ClearManipulators ();
 		/// <summary>
 		/// Sets the queue's default value and updates its current value, in case the default value changed.
 		/// </summary>

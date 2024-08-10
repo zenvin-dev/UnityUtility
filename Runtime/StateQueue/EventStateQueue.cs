@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace Zenvin.Util {
 	/// </summary>
 	/// <typeparam name="T"> The type of value wrapped by the queue. </typeparam>
 	[Serializable]
-	public class EventBasedStateQueue<T> : IStateQueue<T> {
+	public class EventStateQueue<T> : IStateQueue<T> {
 
 		private readonly List<EventQueueEntry<T>> entries = new List<EventQueueEntry<T>> ();
 		private uint lastHandle = 1;
@@ -31,19 +32,24 @@ namespace Zenvin.Util {
 		/// <inheritdoc/>
 		public int Count => entries.Count;
 
+		/// <summary>
+		/// Returns the <see cref="EventQueueEntry{T}"/> at the given index, or <see langword="null"/> if the index was out of range.
+		/// </summary>
+		public EventQueueEntry<T>? this[int index] => index < 0 || index >= Count ? (EventQueueEntry<T>?)null : entries[index];
 
-		public EventBasedStateQueue () { }
 
-		public EventBasedStateQueue (IStateQueueTarget<T> target) {
+		public EventStateQueue () { }
+
+		public EventStateQueue (IStateQueueTarget<T> target) {
 			Target = target;
 		}
 
-		public EventBasedStateQueue (IStateQueueTarget<T> target, T @default) : this (target) {
+		public EventStateQueue (IStateQueueTarget<T> target, T @default) : this (target) {
 			Default = @default;
 			Current = @default;
 		}
 
-		public EventBasedStateQueue (T @default) {
+		public EventStateQueue (T @default) {
 			Default = @default;
 			Current = @default;
 		}
@@ -54,10 +60,10 @@ namespace Zenvin.Util {
 		/// Will fail if the entry already was added previously, or the value's callback is <see langword="null"/>.
 		/// </summary>
 		/// <param name="entry"> The entry to add. </param>
-		/// <param name="suppressUpdate"> If true, the queue's current value will not automatically be updated. Useful if multiple sources are to be added. </param>
+		/// <param name="suppressUpdate"> If true, the queue's current value will not automatically be updated. Useful if multiple manipulators are to be added. </param>
 		/// <returns> Whether the entry was added successfully. </returns>
-		public bool AddSource (EventQueueEntry<T> entry, out uint handle) {
-			return AddSource (entry, out handle, false);
+		public bool AddManipulator (EventQueueEntry<T> entry, out uint handle) {
+			return AddManipulator (entry, out handle, false);
 		}
 
 		/// <summary>
@@ -68,7 +74,7 @@ namespace Zenvin.Util {
 		/// <param name="handle"> The handle under which the entry was added. Must be used to remove the entry. </param>
 		/// <param name="suppressUpdate"> If true, the queue's current value will not automatically be updated. Useful if multiple entries are to be added. </param>
 		/// <returns> Whether the entry was added successfully. </returns>
-		public bool AddSource (EventQueueEntry<T> entry, out uint handle, bool suppressUpdate) {
+		public bool AddManipulator (EventQueueEntry<T> entry, out uint handle, bool suppressUpdate) {
 			if (entry.Callback == null) {
 				handle = 0;
 				return false;
@@ -105,9 +111,9 @@ namespace Zenvin.Util {
 		/// Will fail if the entry's handle does not exist in the queue.
 		/// </summary>
 		/// <param name="handle"> The handle of the entry to remove. </param>.
-		/// <returns> Whether the source was removed successfully. </returns>
-		public bool RemoveSource (uint handle) {
-			return RemoveSource (handle, false);
+		/// <returns> Whether the entry was removed successfully. </returns>
+		public bool RemoveManipulator (uint handle) {
+			return RemoveManipulator (handle, false);
 		}
 
 		/// <summary>
@@ -116,8 +122,8 @@ namespace Zenvin.Util {
 		/// </summary>
 		/// <param name="handle"> The handle of the entry to remove. </param>.
 		/// <param name="suppressUpdate"> If true, the queue's current value will not automatically be updated. Useful if multiple entries are to be removed. </param>
-		/// <returns> Whether the source was removed successfully. </returns>
-		public bool RemoveSource (uint handle, bool suppressUpdate) {
+		/// <returns> Whether the entry was removed successfully. </returns>
+		public bool RemoveManipulator (uint handle, bool suppressUpdate) {
 			if (handle == 0) {
 				return true;
 			}
@@ -134,8 +140,45 @@ namespace Zenvin.Util {
 			return false;
 		}
 
+		/// <summary>
+		/// Removes all entries whose <see cref="EventQueueEntry{T}.Origin"/> matches the given <paramref name="origin"/>, using the default comparer.<br></br>
+		/// If any entries were removed, the queue's current value will be updated.
+		/// </summary>
+		/// <param name="origin"> The origin to look for in entries. </param>
+		/// <returns> The number of removed entries. </returns>
+		public int RemoveManipulatorsByOrigin (object origin) {
+			return RemoveManipulatorsByOrigin (origin, null);
+		}
+
+		/// <summary>
+		/// Removes all entries whose <see cref="EventQueueEntry{T}.Origin"/> matches the given <paramref name="origin"/>, using a given <paramref name="comparer"/>,
+		/// or the default comparer if <see langword="null"/> is passed.<br></br>
+		/// If any entries were removed, the queue's current value will be updated.
+		/// </summary>
+		/// <param name="origin"> The origin to look for in entries. </param>
+		/// <param name="comparer"> The comparer to use to equate entries' origins with the one given though <paramref name="origin"/>. </param>
+		/// <returns> The number of removed entries. </returns>
+		public int RemoveManipulatorsByOrigin (object origin, IEqualityComparer comparer) {
+			int removed = 0;
+			for (int i = Count - 1; i >= 0; i--) {
+				var entryOrigin = entries[i].Origin;
+				if (comparer != null && !comparer.Equals (entryOrigin, origin))
+					continue;
+				if (comparer == null && !CompareEquality (entryOrigin, origin))
+					continue;
+
+				entries.RemoveAt (i);
+				removed++;
+			}
+
+			if (removed > 0)
+				Update ();
+
+			return removed;
+		}
+
 		/// <inheritdoc/>
-		public void ClearSources () {
+		public void ClearManipulators () {
 			if (entries.Count > 0) {
 				entries.Clear ();
 				Update ();
@@ -165,25 +208,17 @@ namespace Zenvin.Util {
 			Update ();
 		}
 
-	}
 
-	public struct EventQueueEntry<T> {
-		internal uint Handle;
+		private static bool CompareEquality (object a, object b) {
+			if (a == null && b == null)
+				return true;
 
-		public readonly int Order;
-		public readonly ProcessQueueState<T> Callback;
+			if (a != null)
+				return a.Equals (b);
+			if (b != null)
+				return b.Equals (a);
 
-
-		public EventQueueEntry (ProcessQueueState<T> callback) : this (0, callback) { }
-
-		public EventQueueEntry (int order, ProcessQueueState<T> callback) : this () {
-			Order = order;
-			Callback = callback;
-		}
-
-
-		public static implicit operator EventQueueEntry<T> ((int order, ProcessQueueState<T> callback) data) {
-			return new EventQueueEntry<T> (data.order, data.callback);
+			return false;
 		}
 	}
 }

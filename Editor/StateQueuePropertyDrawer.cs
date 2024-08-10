@@ -3,8 +3,8 @@ using UnityEngine;
 using Zenvin.EditorUtil;
 
 namespace Zenvin.Util {
-	[CustomPropertyDrawer(typeof(StateQueue<>))]
-	[CustomPropertyDrawer (typeof (EventBasedStateQueue<>))]
+	[CustomPropertyDrawer(typeof(InterfaceStateQueue<>))]
+	[CustomPropertyDrawer (typeof (EventStateQueue<>))]
 	public class StateQueuePropertyDrawer : PropertyDrawer {
 
 		public override void OnGUI (Rect position, SerializedProperty property, GUIContent label) {
